@@ -88,6 +88,13 @@
                 sendMessage();
             }
         });
+
+        fetch("/ollama/").then((res) => {
+            if (res.status != 200) {
+                sendButton.disabled = true;
+                chatContainer.innerHTML = "LLM is currently offline."
+            }
+        })
     </script>
 
 </body>
