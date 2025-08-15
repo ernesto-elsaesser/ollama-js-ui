@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LLM Chat (Gemma3)</title>
     <script src="https://cdn.jsdelivr.net/npm/ollama-js-client/dist/browser/iife/ollama-js.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <style>
         body {
             font-family: sans-serif;
@@ -40,7 +41,7 @@
         const sendButton = document.getElementById('send-button');
 
         const ollama_instance = new window.OllamaJS({
-            model: "gemma3:4b",
+            model: "gemma3:12b",
             url: "/ollama/api/",
         });
 
@@ -51,18 +52,21 @@
             // Display the user's message in the chat history
             const userMessageDiv = document.createElement('div');
             userMessageDiv.className = 'user-message';
-            userMessageDiv.innerHTML = `<b>You:</b><br/>${message}`;
+            userMessageDiv.innerHTML = `<p><b>You:</b></p><p>${message}</p>`;
             chatContainer.appendChild(userMessageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            let reply = "<p><b>AI:</b></p><p>";
 
             // Create a new div to hold the AI's streaming response
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.className = 'ai-message';
-            aiMessageDiv.innerHTML = '<b>AI:</b><br/>';
+            aiMessageDiv.innerHTML = reply + "</p>";
             chatContainer.appendChild(aiMessageDiv);
 
-            const onResponse = (response) => {
-                aiMessageDiv.innerHTML += response;
+            const onResponse = (error, response) => {
+                reply += error ? " ERROR " : response.response;
+                aiMessageDiv.innerHTML = marked.parse(reply) + "</p>";
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             };
 
