@@ -56,17 +56,17 @@
             chatContainer.appendChild(userMessageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            let reply = "<p><b>AI:</b></p><p>";
+            let reply = "<p><b>AI:</b></p>";
 
             // Create a new div to hold the AI's streaming response
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.className = 'ai-message';
-            aiMessageDiv.innerHTML = reply + "...</p>";
+            aiMessageDiv.innerHTML = reply + "<p>...</p>";
             chatContainer.appendChild(aiMessageDiv);
 
             const onResponse = (error, response) => {
                 reply += error ? " ERROR " : response.response;
-                aiMessageDiv.innerHTML = marked.parse(reply) + "</p>";
+                aiMessageDiv.innerHTML = marked.parse(reply);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             };
 
