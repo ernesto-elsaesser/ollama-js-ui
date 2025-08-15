@@ -67,7 +67,7 @@
             const onResponse = (error, response) => {
                 reply += error ? " ERROR " : response.response;
                 aiMessageDiv.innerHTML = marked.parse(reply);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                if (response.done) chatContainer.scrollTop = chatContainer.scrollHeight;
             };
 
             userInput.value = '';
