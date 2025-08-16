@@ -18,11 +18,9 @@
             overflow-y: scroll;
             margin-bottom: 10px;
         }
-        .user-message {
-            text-align: right;
-        }
-        .ai-message {
-            text-align: left;
+        .load {
+            color: gray;
+            font-style: italic;
         }
     </style>
 </head>
@@ -51,7 +49,7 @@
 
             // Display the user's message in the chat history
             const userMessageDiv = document.createElement('div');
-            userMessageDiv.className = 'user-message';
+            userMessageDiv.style.textAlign = "right";
             userMessageDiv.innerHTML = `<p><b>You:</b></p><p>${message}</p>`;
             chatContainer.appendChild(userMessageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -60,8 +58,7 @@
 
             // Create a new div to hold the AI's streaming response
             const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.className = 'ai-message';
-            aiMessageDiv.innerHTML = reply + "<p>...</p>";
+            aiMessageDiv.innerHTML = reply + '<p class="load">Loading ...</p>';
             chatContainer.appendChild(aiMessageDiv);
 
             const onResponse = (error, response) => {
