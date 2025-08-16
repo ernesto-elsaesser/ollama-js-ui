@@ -58,7 +58,7 @@
 
             // Create a new div to hold the AI's streaming response
             const aiMessageDiv = document.createElement('div');
-            aiMessageDiv.innerHTML = reply + '<p class="load">Loading ...</p>';
+            aiMessageDiv.innerHTML = reply + '<p class="load">Loading model, this may take a moment ...</p>';
             chatContainer.appendChild(aiMessageDiv);
 
             const onResponse = (error, response) => {
