@@ -11,15 +11,22 @@
             font-family: sans-serif;
             margin: 20px;
         }
+        p {
+            margin: 10px 0;
+        }
         #chat-container {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 0 10px;
             height: 400px;
             overflow-y: scroll;
             margin-bottom: 10px;
         }
         .load {
             color: gray;
+            font-style: italic;
+        }
+        .offline {
+            color: darkred;
             font-style: italic;
         }
     </style>
@@ -30,7 +37,7 @@
     <div id="chat-container"></div>
     <div>
         <input type="text" id="user-input" style="width: 80%; padding: 5px;" placeholder="Type your message...">
-        <button id="send-button" style="width: 15%; padding: 5px;">Send</button>
+        <button id="send-button" style="width: 15%; padding: 5px;" disabled>Loading</button>
     </div>
 
     <script>
@@ -87,9 +94,11 @@
         });
 
         fetch("/ollama/").then((res) => {
-            if (res.status != 200) {
-                sendButton.disabled = true;
-                chatContainer.innerHTML = "LLM is currently offline."
+            sendButton.innerHTML = "Send";
+            if (res.status == 200) {
+                sendButton.disabled = false;
+            } else {
+                chatContainer.innerHTML = '<p class="offline">LLM is currently offline.<p>';
             }
         })
     </script>
