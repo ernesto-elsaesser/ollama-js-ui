@@ -23,10 +23,6 @@
             color: gray;
             font-style: italic;
         }
-        .offline {
-            color: darkred;
-            font-style: italic;
-        }
         #input {
             display: block;
             height: 100px;
@@ -38,21 +34,21 @@
 </head>
 <body>
     <div id="chat"></div>
-    <textarea id="input" placeholder="Type your message..."></textarea>
-    <button id="send" disabled>Loading</button>
+    <textarea id="input" onkeydown="onKeyDown()" placeholder="Type your message..."></textarea>
+    <button id="send" onclick="sendMessage()">Send</button>
 
     <script>
-        const chatContainer = document.getElementById('chat');
+        const chat = document.getElementById('chat');
         const userInput = document.getElementById('input');
         const sendButton = document.getElementById('send');
 
         const host = "http://localhost:11434"
-        const ollama_instance = new window.OllamaJS({
+        const ollama = new window.OllamaJS({
             model: "gemma3:12b",
             url: host + "/api/",
         });
 
-        const sendMessage = async () => {
+        async function sendMessage() {
             const message = userInput.value.trim();
             if (!message) return;
 
@@ -60,49 +56,37 @@
             const userMessageDiv = document.createElement('div');
             userMessageDiv.style.textAlign = "right";
             userMessageDiv.innerHTML = `<p><b>You:</b></p><p>${message}</p>`;
-            chatContainer.appendChild(userMessageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            chat.appendChild(userMessageDiv);
+            chat.scrollTop = chat.scrollHeight;
 
             let reply = "<p><b>Gemma:</b></p>";
 
             // Create a new div to hold the AI's streaming response
             const aiMessageDiv = document.createElement('div');
             aiMessageDiv.innerHTML = reply + '<p class="load">Loading model, this can take a minute or two ...</p>';
-            chatContainer.appendChild(aiMessageDiv);
+            chat.appendChild(aiMessageDiv);
 
             const onResponse = (error, response) => {
                 reply += error ? " ERROR " : response.response;
                 aiMessageDiv.innerHTML = marked.parse(reply);
-                if (response.done) chatContainer.scrollTop = chatContainer.scrollHeight;
+                if (response.done) chat.scrollTop = chat.scrollHeight;
             };
 
             userInput.value = '';
             sendButton.disabled = true;
 
             try {
-                await ollama_instance.prompt_stream(message, onResponse);
+                await ollama.prompt_stream(message, onResponse);
             } catch (error) {
                 aiMessageDiv.innerHTML += `ERROR: ${error.message}`;
             } finally {
                 sendButton.disabled = false;
             }
-        };
+        }
 
-        sendButton.addEventListener('click', sendMessage);
-        userInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        fetch(host).then((res) => {
-            sendButton.innerHTML = "Send";
-            if (res.status == 200) {
-                sendButton.disabled = false;
-            } else {
-                chatContainer.innerHTML = '<p class="offline">Ollama server offline.<p>';
-            }
-        })
+        function onKeyDown() {
+            if (event.key == 'Enter') sendMessage()
+        }
     </script>
 
 </body>
