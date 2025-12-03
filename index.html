@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Chat (Gemma3)</title>
+    <title>Gemma Chat</title>
     <script src="https://cdn.jsdelivr.net/npm/ollama-js-client/dist/browser/iife/ollama-js.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <style>
@@ -32,8 +32,6 @@
     </style>
 </head>
 <body>
-
-    <h1>LLM Chat</h1>
     <div id="chat-container"></div>
     <div>
         <input type="text" id="user-input" style="width: 80%; padding: 5px;" placeholder="Type your message...">
@@ -45,9 +43,10 @@
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
 
+        const host = "http://localhost:11434"
         const ollama_instance = new window.OllamaJS({
             model: "gemma3:12b",
-            url: "/ollama/api/",
+            url: host + "/api/",
         });
 
         const sendMessage = async () => {
@@ -61,7 +60,7 @@
             chatContainer.appendChild(userMessageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            let reply = "<p><b>AI:</b></p>";
+            let reply = "<p><b>Gemma:</b></p>";
 
             // Create a new div to hold the AI's streaming response
             const aiMessageDiv = document.createElement('div');
@@ -93,12 +92,12 @@
             }
         });
 
-        fetch("/ollama/").then((res) => {
+        fetch(host).then((res) => {
             sendButton.innerHTML = "Send";
             if (res.status == 200) {
                 sendButton.disabled = false;
             } else {
-                chatContainer.innerHTML = '<p class="offline">LLM is currently offline.<p>';
+                chatContainer.innerHTML = '<p class="offline">Ollama server offline.<p>';
             }
         })
     </script>
