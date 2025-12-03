@@ -8,16 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <style>
         body {
-            font-family: sans-serif;
             margin: 20px;
         }
         p {
             margin: 10px 0;
         }
-        #chat-container {
-            border: 1px solid #ccc;
-            padding: 0 10px;
-            height: 400px;
+        #chat {
+            border: 1px solid black;
+            height: 600px;
             overflow-y: scroll;
             margin-bottom: 10px;
         }
@@ -29,19 +27,24 @@
             color: darkred;
             font-style: italic;
         }
+        #input {
+            display: block;
+            height: 100px;
+            width: 100%;
+            padding: 0;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
-    <div id="chat-container"></div>
-    <div>
-        <input type="text" id="user-input" style="width: 80%; padding: 5px;" placeholder="Type your message...">
-        <button id="send-button" style="width: 15%; padding: 5px;" disabled>Loading</button>
-    </div>
+    <div id="chat"></div>
+    <textarea id="input" placeholder="Type your message..."></textarea>
+    <button id="send" disabled>Loading</button>
 
     <script>
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-button');
+        const chatContainer = document.getElementById('chat');
+        const userInput = document.getElementById('input');
+        const sendButton = document.getElementById('send');
 
         const host = "http://localhost:11434"
         const ollama_instance = new window.OllamaJS({
